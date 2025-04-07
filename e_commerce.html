@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BakeIT </title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#8B5A2B',secondary:'#D2B48C'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide-overlay {
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            inset: 0;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+        .nav-arrow {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .nav-arrow:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-hidden">
+    <header class="fixed top-0 left-0 right-0 z-10 bg-transparent">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-white text-3xl font-['Pacifico']">BakeIT</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="" class="text-white hover:text-primary transition-colors">Home</a>
+                <a href="#" class="text-white hover:text-primary transition-colors">Products</a>
+                <a href="#" class="text-white hover:text-primary transition-colors">About</a>
+                <a href="#" class="text-white hover:text-primary transition-colors">Contact</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="#" class="text-white hover:text-primary transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="ri-search-line"></i>
+                    </div>
+                </a>
+                <a href="#" class="text-white hover:text-primary transition-colors">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="ri-shopping-cart-line"></i>
+                    </div>
+                </a>
+                <button class="md:hidden text-white">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="ri-menu-line"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="slider" class="relative w-full h-screen overflow-hidden">
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <div class="absolute inset-0">
+                <img src="ban1.jpg" alt="Cookies and Coffee" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="slide-overlay"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+                <p class="text-lg md:text-xl mb-2 opacity-90">Enjoy the finest baked treats</p>
+                <h1 class="text-4xl md:text-6xl font-bold mb-2">Enjoy Our Exclusive</h1>
+                <h2 class="text-3xl md:text-5xl font-medium mb-8">Cookies and Coffee</h2>
+                <a href="e_com.html" class="bg-primary hover:bg-opacity-50 text-white py-3 px-8 rounded-button font-medium transition-all whitespace-nowrap">Order Now</a>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+            <div class="absolute inset-0">
+                <img src="ban3.jpg" alt="Artisan Bread" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="slide-overlay"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+                <p class="text-lg md:text-xl mb-2 opacity-90">Handcrafted with love</p>
+                <h1 class="text-4xl md:text-6xl font-bold mb-2">Discover Our Artisan</h1>
+                <h2 class="text-3xl md:text-5xl font-medium mb-8">Bread Collection</h2>
+                <a href="e_com.html" class="bg-primary hover:bg-opacity-50 text-white py-3 px-8 rounded-button font-medium transition-all whitespace-nowrap">Order Now</a>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+    
+        <div class="slide">
+            <div class="absolute inset-0">
+                <img src="ban2.jpg" alt="Pastries and Cakes" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="slide-overlay"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
+                <p class="text-lg md:text-xl mb-2 opacity-90">Perfect for every occasion</p>
+                <h1 class="text-4xl md:text-6xl font-bold mb-2">Celebrate With Our</h1>
+                <h2 class="text-3xl md:text-5xl font-medium mb-8">Pastries and Cakes</h2>
+                <a href="e_com.html" class="bg-primary hover:bg-opacity-50 text-white py-3 px-8 rounded-button font-medium transition-all whitespace-nowrap">Order Now</a>
+            </div>
+        </div>
+        
+
+        <!-- Navigation Arrows -->
+        <button id="prevBtn" class="nav-arrow absolute left-6 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+            <div class="w-8 h-8 flex items-center justify-center">
+                <i class="ri-arrow-left-s-line text-white text-2xl"></i>
+            </div>
+        </button>
+        <button id="nextBtn" class="nav-arrow absolute right-6 top-1/2 -translate-y-1/2 flex items-center justify-center z-10">
+            <div class="w-8 h-8 flex items-center justify-center">
+                <i class="ri-arrow-right-s-line text-white text-2xl"></i>
+            </div>
+        </button>
+
+        <!-- Dots Navigation -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-3 z-10">
+            <div class="dot active" data-index="0"></div>
+            <div class="dot" data-index="1"></div>
+            <div class="dot" data-index="2"></div>
+        </div>
+    </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            let currentSlide = 0;
+            let slideInterval;
+
+            // Function to show a specific slide
+            function showSlide(index) {
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Deactivate all dots
+                dots.forEach(dot => {
+                    dot.classList.remove('active');
+                });
+                
+                // Show the current slide and activate corresponding dot
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+                
+                // Update current slide index
+                currentSlide = index;
+            }
+
+            // Function to show next slide
+            function nextSlide() {
+                let newIndex = currentSlide + 1;
+                if (newIndex >= slides.length) {
+                    newIndex = 0;
+                }
+                showSlide(newIndex);
+            }
+
+            // Function to show previous slide
+            function prevSlide() {
+                let newIndex = currentSlide - 1;
+                if (newIndex < 0) {
+                    newIndex = slides.length - 1;
+                }
+                showSlide(newIndex);
+            }
+
+            // Set up event listeners for buttons
+            nextBtn.addEventListener('click', function() {
+                nextSlide();
+                resetInterval();
+            });
+
+            prevBtn.addEventListener('click', function() {
+                prevSlide();
+                resetInterval();
+            });
+
+            // Set up event listeners for dots
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const slideIndex = parseInt(this.getAttribute('data-index'));
+                    showSlide(slideIndex);
+                    resetInterval();
+                });
+            });
+
+            // Start automatic slideshow
+            function startInterval() {
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            // Reset interval when user interacts
+            function resetInterval() {
+                clearInterval(slideInterval);
+                startInterval();
+            }
+            // Initialize slideshow
+            startInterval();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delightful Desserts</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.cart-modal {
+display: none;
+position: fixed;
+top: 0;
+right: 0;
+width: 400px;
+height: 100vh;
+background: white;
+box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+z-index: 1000;
+}
+.cart-modal.active {
+display: block;
+}
+#prevBanner, #nextBanner {
+opacity: 0.7;
+transition: all 0.3s ease;
+}
+#prevBanner:hover, #nextBanner:hover {
+opacity: 1;
+transform: translateY(-50%) scale(1.1);
+}
+</style>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#98C13D',
+secondary: '#F8B03D'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+</head>
+<body class="bg-gray-50">
+<nav class="fixed top-0 w-full bg-white shadow-sm z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16">
+<div class="flex items-center transform transition-transform duration-300 hover:scale-110">
+<span class="text-2xl font-['Pacifico'] text-primary">logo</span>
+</div>
+<div class="flex items-center space-x-8">
+<a href="#" class="text-gray-700 hover:text-primary transform transition-transform duration-300 hover:scale-110">Home</a>
+<a href="#" class="text-gray-700 hover:text-primary transform transition-transform duration-300 hover:scale-110">Shop</a>
+<a href="#" class="text-gray-700 hover:text-primary transform transition-transform duration-300 hover:scale-110">Contact</a>
+<a href="#" class="text-gray-700 hover:text-primary transform transition-transform duration-300 hover:scale-110">Account</a>
+<button id="cartBtn" class="relative flex items-center transform transition-transform duration-300 hover:scale-110">
+<i class="ri-shopping-cart-line text-xl"></i>
+<span id="cartCount" class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<div class="pt-16">
+<div id="banner" class="relative bg-cover bg-center h-[500px]" style="background-image: url('banner5.jpg');">
+<div class="absolute inset-0 bg-black bg-opacity-40"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10 h-full flex items-center">
+<div class="text-left">
+<h1 id="bannerTitle" class="text-5xl font-bold text-white mb-6">Delightful Desserts</h1>
+<p id="bannerDescription" class="text-xl text-white mb-8">Discover our handcrafted desserts made with love and premium ingredients</p>
+<button id="shopNowBtn" class="bg-primary text-white px-8 py-3 rounded-button hover:bg-opacity-90 transition-all">Shop Now</button>
+</div>
+</div>
+<button id="prevBanner" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center z-20 transition-all">
+<i class="ri-arrow-left-s-line text-2xl text-gray-800"></i>
+</button>
+<button id="nextBanner" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center z-20 transition-all">
+<i class="ri-arrow-right-s-line text-2xl text-gray-800"></i>
+</button>
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<h2 class="text-3xl font-bold text-gray-900 mb-8">Featured Products</h2>
+<div class="flex justify-center mb-8">
+<div class="inline-flex bg-gray-100 p-1 rounded-full">
+<button id="allCategoryBtn" class="px-6 py-2 rounded-full bg-primary text-white whitespace-nowrap">All</button>
+<button id="dessertsCategoryBtn" class="px-6 py-2 rounded-full text-gray-700 whitespace-nowrap">Desserts</button>
+<button id="drinksCategoryBtn" class="px-6 py-2 rounded-full text-gray-700 whitespace-nowrap">Drinks</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="productContainer">
+<!-- Products will be dynamically inserted here -->
+</div>
+</div>
+</div>
+<div id="cartModal" class="cart-modal p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-bold">Shopping Cart</h3>
+<button id="closeCart" class="text-gray-500 hover:text-gray-700">
+<i class="ri-close-line text-2xl"></i>
+</button>
+</div>
+<div id="cartItems" class="space-y-4"></div>
+<div class="mt-6 pt-6 border-t">
+<div class="flex justify-between mb-4">
+<span class="font-semibold">Total:</span>
+<span id="cartTotal" class="font-bold cursor-pointer hover:text-primary transition-colors">₹ 0.00</span>
+</div>
+<button id="checkoutBtn" class="w-full bg-primary text-white py-3 rounded-button hover:bg-opacity-90 whitespace-nowrap">Checkout</button>
+</div>
+</div>
+<div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 z-[1001] hidden flex items-center justify-center">
+<div class="bg-white rounded-lg p-6 w-full max-w-md">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-bold">Payment Gateway</h3>
+<button id="closePayment" class="text-gray-500 hover:text-gray-700">
+<i class="ri-close-line text-2xl"></i>
+</button>
+</div>
+<div class="mb-6">
+<p class="text-gray-700 mb-2">Order Summary</p>
+<div class="flex justify-between font-semibold">
+<span>Total Amount:</span>
+<span id="paymentTotal">₹ 0.00</span>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-gray-700 mb-2">Card Number</label>
+<input type="text" placeholder="1234 5678 9012 3456" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+</div>
+<div class="flex space-x-4">
+<div class="flex-1">
+<label class="block text-gray-700 mb-2">Expiry Date</label>
+<input type="text" placeholder="MM/YY" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+</div>
+<div class="flex-1">
+<label class="block text-gray-700 mb-2">CVV</label>
+<input type="text" placeholder="123" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+</div>
+</div>
+<div>
+<label class="block text-gray-700 mb-2">Name on Card</label>
+<input type="text" placeholder="John Doe" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+</div>
+</div>
+<div class="mt-6">
+<div class="mb-6 p-4 border border-gray-200 rounded-lg">
+<div class="flex justify-center mb-4">
+<div class="tabs inline-flex bg-gray-100 p-1 rounded-full">
+<button id="cardPayTab" class="px-6 py-2 rounded-full bg-primary text-white whitespace-nowrap">Card Payment</button>
+<button id="upiPayTab" class="px-6 py-2 rounded-full text-gray-700 whitespace-nowrap">UPI Payment</button>
+</div>
+</div>
+<div id="cardPaymentSection" class="block">
+<div class="flex space-x-4">
+<button id="payNowBtn" class="flex-1 bg-primary text-white py-3 rounded-button hover:bg-opacity-90 whitespace-nowrap">Pay Now</button>
+<button id="cancelPayment" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-button hover:bg-gray-300 whitespace-nowrap">Cancel</button>
+</div>
+</div>
+<div id="upiPaymentSection" class="hidden">
+<div class="flex flex-col items-center">
+<div class="bg-white p-2 border border-gray-200 rounded-lg mb-4">
+<img src="qrcode.jpg" alt="Payment QR Code" class="w-48 h-48 object-contain">
+</div>
+<p class="text-gray-700 mb-2">Scan with Google Pay or Phone Pay</p>
+<div class="bg-gray-100 px-4 py-2 rounded-full mb-4">
+<p class="text-gray-800 font-medium">UPI ID: deepanshupandeyrkt2002@okaxis</p>
+</div>
+<div class="flex space-x-4">
+<button id="upiPayDoneBtn" class="flex-1 bg-primary text-white py-3 rounded-button hover:bg-opacity-90 whitespace-nowrap">Payment Done</button>
+<button id="cancelUpiPayment" class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-button hover:bg-gray-300 whitespace-nowrap">Cancel</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-center space-x-4">
+<div class="w-10 h-10 flex items-center justify-center">
+<i class="ri-visa-fill text-2xl text-blue-700"></i>
+</div>
+<div class="w-10 h-10 flex items-center justify-center">
+<i class="ri-mastercard-fill text-2xl text-orange-500"></i>
+</div>
+<div class="w-10 h-10 flex items-center justify-center">
+<i class="ri-paypal-fill text-2xl text-blue-800"></i>
+</div>
+<div class="w-10 h-10 flex items-center justify-center">
+<i class="ri-alipay-fill text-2xl text-blue-500"></i>
+</div>
+<div class="w-10 h-10 flex items-center justify-center">
+<i class="ri-google-fill text-2xl text-blue-600"></i>
+</div>
+<div class="w-10 h-10 flex items-center justify-center">
+<i class="ri-phone-fill text-2xl text-green-600"></i>
+</div>
+</div>
+</div>
+</div>
+<script>
+const banners = [
+{
+title: "Delightful Desserts",
+description: "Discover our handcrafted desserts made with love and premium ingredients",
+image: "banner5.jpg"
+},
+{
+title: "Seasonal Specials",
+description: "Try our limited-time seasonal desserts featuring fresh local ingredients",
+image: "banner1.jpg"
+},
+{
+title: "Celebration Cakes",
+description: "Make your special occasions memorable with our custom celebration cakes",
+image: "banner3.jpg"
+}
+];
+let currentBannerIndex = 0;
+const products = [
+{
+id: 1,
+name: "Classic Cupcake",
+price: 4.99,
+image: "m1.jpg",
+description: "Classic vanilla cupcake with buttercream frosting",
+category: "desserts"
+},
+{
+id: 2,
+name: "Chocolate Dream",
+price: 5.99,
+image: "m2.jpg",
+description: "Rich chocolate cake with ganache",
+category: "desserts"
+},
+{
+id: 3,
+name: "Berry Bliss",
+price: 6.99,
+image: "m3.jpg",
+description: "Fresh berry cheesecake",
+category: "desserts"
+},
+{
+id: 4,
+name: "Caramel Delight",
+price: 5.49,
+image: "m4.jpg",
+description: "Caramel layered dessert",
+category: "desserts"
+},
+{
+id: 5,
+name: "Iced Matcha Latte",
+price: 4.49,
+image: "m5.jpg",
+description: "Creamy matcha with hints of vanilla",
+category: "drinks"
+},
+{
+id: 6,
+name: "Berry Smoothie",
+price: 5.29,
+image: "m6.jpg",
+description: "Blend of seasonal berries and yogurt",
+category: "drinks"
+},
+{
+id: 7,
+name: "Caramel Macchiato",
+price: 4.99,
+image: "m7.jpg",
+description: "Espresso with vanilla and caramel",
+category: "drinks"
+},
+{
+id: 8,
+name: "Mint Lemonade",
+price: 3.99,
+image: "m8.jpg",
+description: "Fresh squeezed lemons with mint",
+category: "drinks"
+}
+];
+let cart = [];
+function renderProducts(category = 'all') {
+const container = document.getElementById('productContainer');
+const filteredProducts = category === 'all'
+? products
+: products.filter(product => product.category === category);
+container.innerHTML = filteredProducts.map(product => `
+<div class="bg-white rounded-lg shadow-sm overflow-hidden transform transition-transform duration-300 hover:scale-105">
+<img src="${product.image}" alt="${product.name}" class="w-full h-64 object-cover">
+<div class="p-6">
+<h3 class="text-lg font-semibold mb-2">${product.name}</h3>
+<p class="text-gray-600 mb-4">${product.description}</p>
+<div class="flex justify-between items-center">
+<span class="text-xl font-bold">$${product.price.toFixed(2)}</span>
+<button onclick="addToCart(${product.id})" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90">
+Add to Cart
+</button>
+</div>
+</div>
+</div>
+`).join('');
+}
+function addToCart(productId) {
+const product = products.find(p => p.id === productId);
+const existingItem = cart.find(item => item.id === productId);
+if (existingItem) {
+existingItem.quantity += 1;
+} else {
+cart.push({...product, quantity: 1});
+}
+updateCartUI();
+}
+function removeFromCart(productId) {
+cart = cart.filter(item => item.id !== productId);
+updateCartUI();
+}
+function updateQuantity(productId, delta) {
+const item = cart.find(item => item.id === productId);
+if (item) {
+item.quantity = Math.max(0, item.quantity + delta);
+if (item.quantity === 0) {
+removeFromCart(productId);
+}
+updateCartUI();
+}
+}
+function updateCartUI() {
+const cartItems = document.getElementById('cartItems');
+const cartCount = document.getElementById('cartCount');
+const cartTotal = document.getElementById('cartTotal');
+const paymentTotal = document.getElementById('paymentTotal');
+cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+cartItems.innerHTML = cart.map(item => `
+<div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg transform transition-transform duration-300 hover:scale-105">
+<div class="flex items-center space-x-4">
+<img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+<div>
+<h4 class="font-semibold">${item.name}</h4>
+<p class="text-gray-600">$${item.price.toFixed(2)}</p>
+</div>
+</div>
+<div class="flex items-center space-x-2">
+<button onclick="updateQuantity(${item.id}, -1)" class="text-gray-500 hover:text-gray-700">
+<i class="ri-subtract-line"></i>
+</button>
+<span class="mx-2">${item.quantity}</span>
+<button onclick="updateQuantity(${item.id}, 1)" class="text-gray-500 hover:text-gray-700">
+<i class="ri-add-line"></i>
+</button>
+<button onclick="removeFromCart(${item.id})" class="ml-4 text-red-500 hover:text-red-700">
+<i class="ri-delete-bin-line"></i>
+</button>
+</div>
+</div>
+`).join('');
+const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+const totalFormatted = `$${total.toFixed(2)}`;
+cartTotal.textContent = totalFormatted;
+if (paymentTotal) {
+paymentTotal.textContent = totalFormatted;
+}
+}
+document.getElementById('cartBtn').addEventListener('click', () => {
+document.getElementById('cartModal').classList.add('active');
+});
+document.getElementById('closeCart').addEventListener('click', () => {
+document.getElementById('cartModal').classList.remove('active');
+});
+function openPaymentGateway() {
+const paymentModal = document.getElementById('paymentModal');
+paymentModal.classList.remove('hidden');
+document.getElementById('cartModal').classList.remove('active');
+}
+function closePaymentGateway() {
+document.getElementById('paymentModal').classList.add('hidden');
+}
+document.getElementById('shopNowBtn').addEventListener('click', (e) => {
+e.preventDefault();
+const featuredProductsSection = document.getElementById('productContainer');
+featuredProductsSection.scrollIntoView({ behavior: 'smooth' });
+});
+document.getElementById('allCategoryBtn').addEventListener('click', () => {
+setActiveCategory('all');
+renderProducts('all');
+});
+document.getElementById('dessertsCategoryBtn').addEventListener('click', () => {
+setActiveCategory('desserts');
+renderProducts('desserts');
+});
+document.getElementById('drinksCategoryBtn').addEventListener('click', () => {
+setActiveCategory('drinks');
+renderProducts('drinks');
+});
+function setActiveCategory(category) {
+// Reset all buttons
+document.getElementById('allCategoryBtn').classList.remove('bg-primary', 'text-white');
+document.getElementById('allCategoryBtn').classList.add('text-gray-700');
+document.getElementById('dessertsCategoryBtn').classList.remove('bg-primary', 'text-white');
+document.getElementById('dessertsCategoryBtn').classList.add('text-gray-700');
+document.getElementById('drinksCategoryBtn').classList.remove('bg-primary', 'text-white');
+document.getElementById('drinksCategoryBtn').classList.add('text-gray-700');
+// Set active button
+if (category === 'all') {
+document.getElementById('allCategoryBtn').classList.add('bg-primary', 'text-white');
+document.getElementById('allCategoryBtn').classList.remove('text-gray-700');
+} else if (category === 'desserts') {
+document.getElementById('dessertsCategoryBtn').classList.add('bg-primary', 'text-white');
+document.getElementById('dessertsCategoryBtn').classList.remove('text-gray-700');
+} else if (category === 'drinks') {
+document.getElementById('drinksCategoryBtn').classList.add('bg-primary', 'text-white');
+document.getElementById('drinksCategoryBtn').classList.remove('text-gray-700');
+}
+}
+function updateBanner(index) {
+currentBannerIndex = index;
+const banner = banners[index];
+const bannerElement = document.getElementById('banner');
+const titleElement = document.getElementById('bannerTitle');
+const descriptionElement = document.getElementById('bannerDescription');
+// Apply fade out effect
+bannerElement.style.opacity = '0';
+setTimeout(() => {
+// Update content
+bannerElement.style.backgroundImage = `url('${banner.image}')`;
+titleElement.textContent = banner.title;
+descriptionElement.textContent = banner.description;
+// Apply fade in effect
+bannerElement.style.opacity = '1';
+}, 300);
+}
+document.getElementById('prevBanner').addEventListener('click', () => {
+let newIndex = currentBannerIndex - 1;
+if (newIndex < 0) newIndex = banners.length - 1;
+updateBanner(newIndex);
+});
+document.getElementById('nextBanner').addEventListener('click', () => {
+let newIndex = currentBannerIndex + 1;
+if (newIndex >= banners.length) newIndex = 0;
+updateBanner(newIndex);
+});
+// Add transition to banner
+document.getElementById('banner').style.transition = 'opacity 0.3s ease-in-out';
+// Payment gateway event listeners
+document.getElementById('cartTotal').addEventListener('click', openPaymentGateway);
+document.getElementById('checkoutBtn').addEventListener('click', openPaymentGateway);
+document.getElementById('closePayment').addEventListener('click', closePaymentGateway);
+document.getElementById('cancelPayment').addEventListener('click', closePaymentGateway);
+
+// UPI Payment tab functionality
+document.getElementById('cardPayTab').addEventListener('click', () => {
+  document.getElementById('cardPayTab').classList.add('bg-primary', 'text-white');
+  document.getElementById('cardPayTab').classList.remove('text-gray-700');
+  document.getElementById('upiPayTab').classList.remove('bg-primary', 'text-white');
+  document.getElementById('upiPayTab').classList.add('text-gray-700');
+  
+  document.getElementById('cardPaymentSection').classList.remove('hidden');
+  document.getElementById('cardPaymentSection').classList.add('block');
+  document.getElementById('upiPaymentSection').classList.add('hidden');
+  document.getElementById('upiPaymentSection').classList.remove('block');
+});
+
+document.getElementById('upiPayTab').addEventListener('click', () => {
+  document.getElementById('upiPayTab').classList.add('bg-primary', 'text-white');
+  document.getElementById('upiPayTab').classList.remove('text-gray-700');
+  document.getElementById('cardPayTab').classList.remove('bg-primary', 'text-white');
+  document.getElementById('cardPayTab').classList.add('text-gray-700');
+  
+  document.getElementById('upiPaymentSection').classList.remove('hidden');
+  document.getElementById('upiPaymentSection').classList.add('block');
+  document.getElementById('cardPaymentSection').classList.add('hidden');
+  document.getElementById('cardPaymentSection').classList.remove('block');
+});
+
+document.getElementById('cancelUpiPayment').addEventListener('click', closePaymentGateway);
+
+function showSuccessNotification() {
+  closePaymentGateway();
+  // Create success notification
+  const notification = document.createElement('div');
+  notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-[1002] transform transition-transform duration-300 translate-y-0';
+  notification.innerHTML = `
+  <div class="flex items-center space-x-2">
+  <i class="ri-check-line text-xl"></i>
+  <span>Payment successful! Your order is being processed.</span>
+  </div>
+  `;
+  document.body.appendChild(notification);
+  // Clear cart
+  cart = [];
+  updateCartUI();
+  // Remove notification after 5 seconds
+  setTimeout(() => {
+    notification.style.transform = 'translateY(200%)';
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 300);
+  }, 5000);
+}
+
+document.getElementById('payNowBtn').addEventListener('click', showSuccessNotification);
+document.getElementById('upiPayDoneBtn').addEventListener('click', showSuccessNotification);
+renderProducts();
+updateCartUI();
+</script>
+</body>
+</html>
